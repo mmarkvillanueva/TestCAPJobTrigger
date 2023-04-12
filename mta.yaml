@@ -1,0 +1,39 @@
+_schema-version: '3.1'
+ID: TestCAPJobTrigger
+version: 1.0.0
+description: Sample CAP Project to Test Job Scheduler
+parameters:
+  enable-parallel-deployments: true
+build-parameters:
+  before-all:
+    - builder: custom
+      commands:
+        - npx -p @sap/cds-dk cds build --production
+modules:
+  - name: TestCAPJobTrigger-srv
+    type: nodejs
+    path: gen/srv
+    parameters:
+      buildpack: nodejs_buildpack
+    build-parameters:
+      builder: npm-ci
+    provides:
+      - name: srv-api
+        properties:
+          srv-url: '${default-url}'
+    # requires:
+    #   - name: jobschedulerinstance
+    #   - name: xsuaaforsimplejobs
+# resources:
+#   - name: xsuaaforsimplejobs
+#     type: org.cloudfoundry.managed-service
+#     parameters:
+#       service: xsuaa
+#       service-plan: broker
+  # - name: jobschedulerinstance
+  #   type: org.cloudfoundry.managed-service
+  #   parameters:
+  #     service: jobscheduler
+  #     service-plan: lite
+#     properties:
+#       enable-xsuaa-support: true
